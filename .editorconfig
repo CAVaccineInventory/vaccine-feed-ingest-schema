@@ -1,0 +1,36 @@
+# EditorConfig: https://EditorConfig.org
+
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Javascript
+[*.{js,py,ts,tsx}]
+charset = utf-8
+indent_style = space
+indent_size = 2
+
+# Python
+[*.py]
+charset = utf-8
+indent_style = space
+indent_size = 4
+
+# Python
+[*.sh]
+charset = utf-8
+indent_style = space
+indent_size = 4
+
+# Markdown
+[*.{md,txt}]
+indent_style = space
+indent_size = 2
+
+# Makefile
+[Makefile]
+indent_style = tab
