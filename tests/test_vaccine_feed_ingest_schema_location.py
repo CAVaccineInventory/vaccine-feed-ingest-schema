@@ -1,29 +1,17 @@
 import inspect
-from importlib import reload
 
 import pydantic.error_wrappers
 import pytest
 
-DEPRECATION_SNIPPET = "vaccine_feed_ingest_schema.schema is deprecated."
+from vaccine_feed_ingest_schema import location
 
 
-def test_warn_on_import():
-    with pytest.warns(DeprecationWarning, match=DEPRECATION_SNIPPET):
-        from vaccine_feed_ingest_schema import schema
-
-        # Depending on the order in which tests run, the above import may be
-        # skipped. Reload it so that we trigger the warning, if it exists.
-        reload(schema)
-
-
-@pytest.mark.filterwarnings(f"ignore: {DEPRECATION_SNIPPET}")
 def test_has_expected_classes():
-    from vaccine_feed_ingest_schema import schema
-
-    class_tuples = inspect.getmembers(schema, inspect.isclass)
+    class_tuples = inspect.getmembers(location, inspect.isclass)
     classes = list(map(lambda class_tuple: class_tuple[0], class_tuples))
 
     expected_classes = [
+        "BaseModel",
         "Address",
         "LatLng",
         "Contact",
@@ -36,8 +24,6 @@ def test_has_expected_classes():
         "Link",
         "Source",
         "NormalizedLocation",
-        "ImportMatchAction",
-        "ImportSourceLocation",
     ]
 
     for expected_class in expected_classes:
@@ -49,9 +35,6 @@ def test_has_expected_classes():
             raise KeyError(f"Extra class {klass} defined. Did you update your tests?")
 
 
-@pytest.mark.filterwarnings(f"ignore: {DEPRECATION_SNIPPET}")
 def test_raises_on_invalid_location():
-    from vaccine_feed_ingest_schema import schema
-
     with pytest.raises(pydantic.error_wrappers.ValidationError):
-        schema.NormalizedLocation()
+        location.NormalizedLocation()

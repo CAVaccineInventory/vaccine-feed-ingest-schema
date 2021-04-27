@@ -20,12 +20,12 @@ Import this package then use it to construct normalized objects with type
 enforcement.
 
 ```python
-from vaccine_feed_ingest_schema import schema
+from vaccine_feed_ingest_schema import location
 
 
-schema.NormalizedLocation(
+location.NormalizedLocation(
   id="vaccinebot:uuid-for-site",
-  source=schema.Source(
+  source=location.Source(
     source="vaccinebot",
     id="uuid-for-site",
     fetched_from_uri="https://vaccinateTheStates.com",
