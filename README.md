@@ -43,28 +43,40 @@ For more details on the schema, read the inline comments or the
 To contribute to this library, first checkout the code. Then create a new
 virtual environment:
 
-    cd vaccine-feed-ingest-schema
-    python -mvenv venv
-    source venv/bin/activate
+```sh
+cd vaccine-feed-ingest-schema
+python -mvenv venv
+source venv/bin/activate
+```
 
 Or if you are using `pipenv`:
 
-    pipenv shell
+```sh
+pipenv shell
+```
 
 Now install the dependencies, linters, and tests:
 
-    pip install -e '.[lint,test]'
+```sh
+pip install -e '.[lint,test]'
+```
 
 To run code formatters:
 
-    isort .
-    black .
+```sh
+isort .
+black .
+```
 
 To run linters:
 
-    mypy .
-    flake8 vaccine_feed_ingest_schema
+```sh
+mypy .
+flake8 vaccine_feed_ingest_schema
+```
 
 To run the tests:
 
-    pytest
+```sh
+pytest
+```
