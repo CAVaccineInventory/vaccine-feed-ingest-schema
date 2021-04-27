@@ -17,6 +17,22 @@ Install this library using `pip`:
 Import this package then use it to construct normalized objects with type
 enforcement.
 
+```python
+from vaccine_feed_ingest_schema import schema
+
+
+schema.NormalizedLocation(
+  id="vaccinebot:uuid-for-site",
+  source=schema.Source(
+    source="vaccinebot",
+    id="uuid-for-site",
+    fetched_from_uri="https://vaccinateTheStates.com",
+    published_at="2021-01-13T00:00:00-08:00",
+    data={},
+  )
+)
+```
+
 For more details on the schema, read the inline comments or the
 [`vaccine-feed-ingest` wiki](https://github.com/CAVaccineInventory/vaccine-feed-ingest/wiki/Normalized-Location-Schema).
 
