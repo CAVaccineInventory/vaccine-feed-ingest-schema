@@ -10,7 +10,9 @@ Normalized data schema for the output of the vaccine-feed-ingest pipeline.
 
 Install this library using `pip`:
 
-    $ pip install vaccine-feed-ingest-schema
+```sh
+pip install vaccine-feed-ingest-schema
+```
 
 ## Usage
 
