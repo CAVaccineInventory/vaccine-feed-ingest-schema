@@ -11,7 +11,6 @@ def test_has_expected_classes():
     classes = list(map(lambda class_tuple: class_tuple[0], class_tuples))
 
     expected_classes = [
-        "BaseModel",
         "Address",
         "LatLng",
         "Contact",
