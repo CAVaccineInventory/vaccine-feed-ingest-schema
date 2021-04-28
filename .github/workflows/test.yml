@@ -59,3 +59,4 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PYTHON_ISORT_CONFIG_FILE: .isort.cfg # This is the default, but was not being picked up
