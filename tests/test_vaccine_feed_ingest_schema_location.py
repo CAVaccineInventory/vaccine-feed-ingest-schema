@@ -2,7 +2,6 @@ import inspect
 
 import pydantic.error_wrappers
 import pytest
-
 from vaccine_feed_ingest_schema import location
 
 
