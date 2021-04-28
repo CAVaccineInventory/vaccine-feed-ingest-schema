@@ -20,11 +20,11 @@ class Address(BaseModel):
     },
     """
 
-    street1: str
+    street1: Optional[str]
     street2: Optional[str]
-    city: str
-    state: str
-    zip: str
+    city: Optional[str]
+    state: Optional[str]
+    zip: Optional[str]
 
 
 class LatLng(BaseModel):
