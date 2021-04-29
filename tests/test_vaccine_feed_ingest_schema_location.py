@@ -54,6 +54,26 @@ def test_has_expected_enums():
     assert not extra, "Extra enum found. Update this test."
 
 
+def test_valid_contact():
+    assert location.Contact(
+        contact_type=location.ContactType.BOOKING,
+        email="vaccine@example.com",
+    )
+    assert location.Contact(website="https://example.com")
+    assert location.Contact(phone="(510) 555-5555")
+
+
+def test_raises_on_invalid_contact():
+    with pytest.raises(pydantic.error_wrappers.ValidationError):
+        location.Contact(contact_type=location.ContactType.GENERAL)
+
+    with pytest.raises(pydantic.error_wrappers.ValidationError):
+        location.Contact(contact_type="invalid", email="vaccine@example.com")
+
+    with pytest.raises(pydantic.error_wrappers.ValidationError):
+        location.Contact(email="vaccine@example.com", website="https://example.com")
+
+
 def test_raises_on_invalid_location():
     with pytest.raises(pydantic.error_wrappers.ValidationError):
         location.NormalizedLocation()
