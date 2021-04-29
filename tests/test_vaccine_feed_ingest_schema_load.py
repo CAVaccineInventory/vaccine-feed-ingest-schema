@@ -1,23 +1,22 @@
-import inspect
+import pydantic
 
 from vaccine_feed_ingest_schema import load
 
+from .common import collect_existing_subclasses
 
-def test_has_expected_classes():
-    class_tuples = inspect.getmembers(load, inspect.isclass)
-    classes = list(map(lambda class_tuple: class_tuple[0], class_tuples))
 
-    expected_classes = [
+def test_has_expected_schema():
+    expected = {
         "BaseModel",
         "NormalizedLocation",
         "ImportMatchAction",
         "ImportSourceLocation",
-    ]
+    }
 
-    for expected_class in expected_classes:
-        if expected_class not in classes:
-            raise KeyError(f"Expected class {expected_class} is not defined.")
+    existing = collect_existing_subclasses(load, pydantic.BaseModel)
 
-    for klass in classes:
-        if klass not in expected_classes:
-            raise KeyError(f"Extra class {klass} defined. Did you update your tests?")
+    missing = expected - existing
+    assert not missing, "Expected pydantic schemas are missing"
+
+    extra = existing - expected
+    assert not extra, "Extra pydantic schemas found. Update this test."
