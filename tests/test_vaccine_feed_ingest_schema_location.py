@@ -89,6 +89,16 @@ def test_raises_on_invalid_location():
             ),
         )
 
+    with pytest.raises(pydantic.error_wrappers.ValidationError):
+        location.NormalizedLocation(
+            id="invalid:id",
+            source=location.Source(
+                source="source",
+                id="id",
+                data={"id": "id"},
+            ),
+        )
+
 
 def test_valid_location():
     # Minimal record

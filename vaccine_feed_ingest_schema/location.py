@@ -342,3 +342,23 @@ class NormalizedLocation(BaseModel):
     notes: Optional[List[str]]
     active: Optional[bool]
     source: Source
+
+    @root_validator
+    @classmethod
+    def validate_id_source(cls, values: dict) -> dict:
+        loc_id = values.get("id")
+        if not loc_id:
+            return values
+
+        source = values.get("source")
+        if not source:
+            return values
+
+        source_name = source.source
+        if not source_name:
+            return values
+
+        if not loc_id.startswith(f"{source_name}:"):
+            raise ValueError("Location ID must be prefiexed with with source name")
+
+        return values
