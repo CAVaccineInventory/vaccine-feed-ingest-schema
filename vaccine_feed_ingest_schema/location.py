@@ -130,7 +130,7 @@ class VaccineProvider(str, enum.Enum):
     ALBERTSONS = "albertson"
     PAVILIONS = "pavilions"
     WALMART = "walmart"
-    CVS = "CVS"
+    CVS = "cvs"
 
 
 @enum.unique
