@@ -55,7 +55,7 @@ class StringTime(datetime.date):
 
     @classmethod
     def validate(cls, v: datetime.time) -> str:
-        return v.isoformat('minutes')
+        return v.isoformat("minutes")
 
 
 @enum.unique
@@ -258,19 +258,43 @@ class OpenDate(BaseModel):
     opens: Optional[StringDate]
     closes: Optional[StringDate]
 
+    @root_validator
+    @classmethod
+    def validate_closes_after_opens(cls, values: dict) -> dict:
+        opens = values.get("opens")
+        closes = values.get("closes")
+
+        if opens and closes:
+            if closes < opens:
+                raise ValueError("Closes date must be after opens date")
+
+        return values
+
 
 class OpenHour(BaseModel):
     """
     {
         "day": str as day of week enum e.g. monday,
-        "opens": str as hh:mm,
-        "closes": str as hh:mm,
+        "opens": str as 24h hh:mm,
+        "closes": str as 24h hh:mm,
     }
     """
 
     day: DayOfWeek
     opens: StringTime
     closes: StringTime
+
+    @root_validator
+    @classmethod
+    def validate_closes_after_opens(cls, values: dict) -> dict:
+        opens = values.get("opens")
+        closes = values.get("closes")
+
+        if opens and closes:
+            if closes < opens:
+                raise ValueError("Closes time must be after opens time")
+
+        return values
 
 
 class Availability(BaseModel):
