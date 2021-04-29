@@ -1,8 +1,9 @@
-import inspect
 from importlib import reload
 
 import pydantic.error_wrappers
 import pytest
+
+from .common import collect_existing_subclasses
 
 DEPRECATION_SNIPPET = "vaccine_feed_ingest_schema.schema is deprecated."
 
@@ -20,10 +21,7 @@ def test_warn_on_import():
 def test_has_expected_classes():
     from vaccine_feed_ingest_schema import schema
 
-    class_tuples = inspect.getmembers(schema, inspect.isclass)
-    classes = list(map(lambda class_tuple: class_tuple[0], class_tuples))
-
-    expected_classes = [
+    expected = {
         "Address",
         "LatLng",
         "Contact",
@@ -38,15 +36,15 @@ def test_has_expected_classes():
         "NormalizedLocation",
         "ImportMatchAction",
         "ImportSourceLocation",
-    ]
+    }
 
-    for expected_class in expected_classes:
-        if expected_class not in classes:
-            raise KeyError(f"Expected class {expected_class} is not defined.")
+    existing = collect_existing_subclasses(schema, pydantic.BaseModel)
 
-    for klass in classes:
-        if klass not in expected_classes:
-            raise KeyError(f"Extra class {klass} defined. Did you update your tests?")
+    missing = expected - existing
+    assert not missing, "Expected pydantic schemas are missing"
+
+    extra = existing - expected
+    assert not extra, "Extra pydantic schemas found. Update this test."
 
 
 @pytest.mark.filterwarnings(f"ignore: {DEPRECATION_SNIPPET}")
