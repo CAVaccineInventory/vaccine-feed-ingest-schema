@@ -8,7 +8,7 @@ import enum
 import re
 from typing import List, Optional, Union
 
-from pydantic import EmailStr, Field, HttpUrl
+from pydantic import AnyUrl, EmailStr, Field, HttpUrl
 
 from .common import BaseModel
 
@@ -277,7 +277,7 @@ class Link(BaseModel):
     # Use LocationAuthority enum value if available, overwise make your own.
     authority: Union[LocationAuthority, VaccineProvider, str, None]
     id: Optional[str]
-    uri: Optional[str]
+    uri: Optional[AnyUrl]
 
 
 class Source(BaseModel):
@@ -294,7 +294,7 @@ class Source(BaseModel):
 
     source: str
     id: str
-    fetched_from_uri: Optional[str]
+    fetched_from_uri: Optional[AnyUrl]
     fetched_at: Optional[str]
     published_at: Optional[str]
     data: dict
