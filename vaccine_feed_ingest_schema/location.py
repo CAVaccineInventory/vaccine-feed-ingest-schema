@@ -196,6 +196,7 @@ class Contact(BaseModel):
     other: Optional[str]
 
     @root_validator
+    @classmethod
     def validate_has_one_value(cls, values: dict) -> dict:
         oneof_fields = ["phone", "website", "email", "other"]
         has_values = [key for key in oneof_fields if values.get(key)]
