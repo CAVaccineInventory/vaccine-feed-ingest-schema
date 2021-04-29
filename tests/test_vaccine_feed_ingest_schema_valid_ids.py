@@ -1,6 +1,5 @@
 import pydantic
 import pytest
-
 from vaccine_feed_ingest_schema import location
 
 VALID_AUTHORITIES = [
