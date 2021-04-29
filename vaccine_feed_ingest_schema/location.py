@@ -9,7 +9,14 @@ import enum
 import re
 from typing import List, Optional, Union
 
-from pydantic import AnyUrl, EmailStr, Field, HttpUrl, datetime_parse, root_validator
+from pydantic import (
+    AnyUrl,
+    EmailStr,
+    Field,
+    HttpUrl,
+    datetime_parse,
+    root_validator
+)
 
 from .common import BaseModel
 
