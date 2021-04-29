@@ -15,7 +15,7 @@ from pydantic import (
     Field,
     HttpUrl,
     datetime_parse,
-    root_validator
+    root_validator,
 )
 
 from .common import BaseModel
