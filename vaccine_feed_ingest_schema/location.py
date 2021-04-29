@@ -31,6 +31,17 @@ US_PHONE_RE = re.compile(
     r"^(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:\#|x\.?|ext\.?|extension)\s*(\d+))?$"  # noqa: E501
 )
 
+# Lowercase alpha-numeric and underscores
+# e.g. google_places
+ENUM_VALUE_RE = re.compile(r"^[a-z0-9_]+$")
+
+# Lowercase alpha-numeric and underscores with one colon
+# e.g. az_arcgis:hsdg46sj
+LOCATION_ID_RE = re.compile(r"^[a-z0-9_]+\:[a-z0-9_]+$")
+
+# Source ids can have anything but a space or a colon. Those must be replaced with another character (like a dash).
+SOURCE_ID_RE = re.compile(r"^[^\s\:]+$")
+
 
 class StringDatetime(datetime.datetime):
     @classmethod
@@ -351,7 +362,7 @@ class Organization(BaseModel):
     """
 
     # Use VaccineProvider enum value if available overwise make your own.
-    id: Union[VaccineProvider, str, None]
+    id: Union[VaccineProvider, str, None] = Field(regex=ENUM_VALUE_RE.pattern)
     name: Optional[str]
 
 
@@ -365,7 +376,9 @@ class Link(BaseModel):
     """
 
     # Use LocationAuthority enum value if available, overwise make your own.
-    authority: Union[LocationAuthority, VaccineProvider, str, None]
+    authority: Union[LocationAuthority, VaccineProvider, str, None] = Field(
+        regex=ENUM_VALUE_RE.pattern
+    )
     id: Optional[str]
     uri: Optional[AnyUrl]
 
@@ -382,8 +395,8 @@ class Source(BaseModel):
     }
     """
 
-    source: str
-    id: str
+    source: str = Field(regex=ENUM_VALUE_RE.pattern)
+    id: str = Field(regex=SOURCE_ID_RE.pattern)
     fetched_from_uri: Optional[AnyUrl]
     fetched_at: Optional[StringDatetime]
     published_at: Optional[StringDatetime]
@@ -391,7 +404,7 @@ class Source(BaseModel):
 
 
 class NormalizedLocation(BaseModel):
-    id: str
+    id: str = Field(regex=LOCATION_ID_RE.pattern)
     name: Optional[str]
     address: Optional[Address]
     location: Optional[LatLng]
@@ -424,6 +437,6 @@ class NormalizedLocation(BaseModel):
             return values
 
         if not loc_id.startswith(f"{source_name}:"):
-            raise ValueError("Location ID must be prefiexed with with source name")
+            raise ValueError("Location ID must be prefixed with with source name")
 
         return values
