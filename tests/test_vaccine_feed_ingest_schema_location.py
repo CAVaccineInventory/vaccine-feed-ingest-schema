@@ -1,8 +1,5 @@
-import enum
-
 import pydantic.error_wrappers
 import pytest
-
 from vaccine_feed_ingest_schema import location
 
 from .common import collect_existing_subclasses
