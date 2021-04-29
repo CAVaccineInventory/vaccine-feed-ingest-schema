@@ -8,7 +8,7 @@ VALID_AUTHORITIES = [
     "vaccinespotter_org",
     "some_randmom_entity_of_sorts",
     "ma",
-    "ma123"
+    "ma123",
 ]
 
 INVALID_AUTHORITIES = [
@@ -16,7 +16,7 @@ INVALID_AUTHORITIES = [
     "wa/arcgiz",
     "@vaccinespotter",
     "SomeRandomEntity",
-    "MA"
+    "MA",
 ]
 
 
@@ -34,8 +34,8 @@ def test_invalid_authority(invalid_authority):
 VALID_LOCATION_IDS = ["{}:abc123".format(a) for a in VALID_AUTHORITIES]
 
 INVALID_LOCATION_IDS = ["{}:abc123".format(a) for a in INVALID_AUTHORITIES] + [
-    "cvs123", # no colon
-    "wa:arcgis:abc123" # two colons
+    "cvs123",  # no colon
+    "wa:arcgis:abc123",  # two colons
 ]
 
 
@@ -43,7 +43,9 @@ INVALID_LOCATION_IDS = ["{}:abc123".format(a) for a in INVALID_AUTHORITIES] + [
 def test_valid_location_id(valid_id):
     source, id = valid_id.split(":")
 
-    assert location.NormalizedLocation(id=valid_id, source=location.Source(source=source, id=id, data={}))
+    assert location.NormalizedLocation(
+        id=valid_id, source=location.Source(source=source, id=id, data={})
+    )
 
 
 @pytest.mark.parametrize("invalid_id", INVALID_LOCATION_IDS)
@@ -56,5 +58,6 @@ def test_invalid_location_id(invalid_id):
         id = invalid_id
 
     with pytest.raises(pydantic.error_wrappers.ValidationError):
-        location.NormalizedLocation(id=invalid_id, source=location.Source(source=source, id=id, data={}))
-
+        location.NormalizedLocation(
+            id=invalid_id, source=location.Source(source=source, id=id, data={})
+        )
