@@ -1,4 +1,5 @@
 import enum
+import json
 
 import pydantic.error_wrappers
 import pytest
@@ -52,6 +53,67 @@ def test_has_expected_enums():
 
     extra = existing - expected
     assert not extra, "Extra enum found. Update this test."
+
+
+def test_opening_days():
+    assert location.OpenDate(
+        opens="2021-04-01",
+        closes="2021-04-01",
+    )
+
+    assert location.OpenDate(opens="2021-04-01")
+
+    assert location.OpenDate(
+        closes="2021-04-01",
+    )
+
+    with pytest.raises(pydantic.error_wrappers.ValidationError):
+        location.OpenDate(
+            closes="2021-04-01T04:04:04",
+        )
+
+    with pytest.raises(pydantic.error_wrappers.ValidationError):
+        location.OpenDate(
+            opens="tomorrow",
+        )
+
+    with pytest.raises(pydantic.error_wrappers.ValidationError):
+        location.OpenDate(
+            opens="2021-06-01",
+            closes="2021-01-01",
+        )
+
+
+def test_opening_hours():
+    assert location.OpenHour(
+        day="monday",
+        opens="08:00",
+        closes="14:00",
+    )
+
+    with pytest.raises(pydantic.error_wrappers.ValidationError):
+        location.OpenHour(day="monday", opens="8h", closes="14:00")
+
+    with pytest.raises(pydantic.error_wrappers.ValidationError):
+        location.OpenHour(
+            day="mon",
+            opens="08:00",
+            closes="14:00",
+        )
+
+    with pytest.raises(pydantic.error_wrappers.ValidationError):
+        location.OpenHour(
+            day="monday",
+            opens="20:00",
+            closes="06:00",
+        )
+
+    with pytest.raises(pydantic.error_wrappers.ValidationError):
+        location.OpenHour(
+            day="monday",
+            opens="2021-01-01T08:00:00",
+            closes="14:00",
+        )
 
 
 def test_valid_contact():
@@ -112,7 +174,7 @@ def test_valid_location():
     )
 
     # Full record with str enums
-    assert location.NormalizedLocation(
+    full_loc = location.NormalizedLocation(
         id="source:id",
         name="name",
         address=location.Address(
@@ -176,6 +238,39 @@ def test_valid_location():
         source=location.Source(
             source="source",
             id="id",
+            fetched_from_uri="https://example.org",
+            fetched_at="2020-04-04T04:04:04.4444",
+            published_at="2020-04-04T04:04:04.4444",
             data={"id": "id"},
         ),
     )
+    assert full_loc
+
+    # Verify dict serde
+    full_loc_dict = full_loc.dict()
+    assert full_loc_dict
+
+    parsed_full_loc = location.NormalizedLocation.parse_obj(full_loc_dict)
+    assert parsed_full_loc
+
+    assert parsed_full_loc == full_loc
+
+    # Verify json serde
+    full_loc_json = full_loc.json()
+    assert full_loc_json
+
+    parsed_full_loc = location.NormalizedLocation.parse_raw(full_loc_json)
+    assert parsed_full_loc
+
+    assert parsed_full_loc == full_loc
+
+    # Verify dict->json serde
+    full_loc_json_dumps = json.dumps(full_loc_dict)
+    assert full_loc_json_dumps
+
+    assert full_loc_json_dumps == full_loc_json
+
+    parsed_full_loc = location.NormalizedLocation.parse_raw(full_loc_json_dumps)
+    assert parsed_full_loc
+
+    assert parsed_full_loc == full_loc
