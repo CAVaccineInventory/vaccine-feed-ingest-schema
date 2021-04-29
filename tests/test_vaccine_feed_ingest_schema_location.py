@@ -1,3 +1,5 @@
+import enum
+
 import pydantic.error_wrappers
 import pytest
 from vaccine_feed_ingest_schema import location
@@ -29,6 +31,27 @@ def test_has_expected_schema():
 
     extra = existing - expected
     assert not extra, "Extra pydantic schemas found. Update this test."
+
+
+def test_has_expected_enums():
+    expected = {
+        "State",
+        "ContactType",
+        "DayOfWeek",
+        "LocationAuthority",
+        "VaccineProvider",
+        "VaccineSupply",
+        "VaccineType",
+        "WheelchairAccessLevel",
+    }
+
+    existing = collect_existing_subclasses(location, enum.Enum)
+
+    missing = expected - existing
+    assert not missing, "Expected enums are missing"
+
+    extra = existing - expected
+    assert not extra, "Extra enum found. Update this test."
 
 
 def test_raises_on_invalid_location():
