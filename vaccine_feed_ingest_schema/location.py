@@ -8,7 +8,7 @@ import enum
 import re
 from typing import List, Optional, Union
 
-from pydantic import AnyUrl, EmailStr, Field, HttpUrl
+from pydantic import AnyUrl, EmailStr, Field, HttpUrl, root_validator
 
 from .common import BaseModel
 
@@ -194,6 +194,22 @@ class Contact(BaseModel):
     website: Optional[HttpUrl]
     email: Optional[EmailStr]
     other: Optional[str]
+
+    @root_validator
+    def validate_has_one_value(cls, values: dict) -> dict:
+        oneof_fields = ["phone", "website", "email", "other"]
+        has_values = [key for key in oneof_fields if values.get(key)]
+
+        if len(has_values) > 1:
+            raise ValueError(
+                f"Multiple values specified in {', '.join(has_values)}. "
+                "Only one value should be specified per Contact entry."
+            )
+
+        if not has_values:
+            raise ValueError("No values specified for Contact.")
+
+        return values
 
 
 class OpenDate(BaseModel):
