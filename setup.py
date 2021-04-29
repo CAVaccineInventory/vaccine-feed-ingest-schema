@@ -28,7 +28,7 @@ setup(
     license="MIT",
     version=VERSION,
     packages=["vaccine_feed_ingest_schema"],
-    install_requires=["pydantic"],
+    install_requires=["pydantic[email]"],
     extras_require={"test": ["pytest"], "lint": ["flake8", "black", "mypy", "isort"]},
     tests_require=["vaccine-feed-ingest-schema[test]"],
     python_requires=">=3.9",

@@ -4,9 +4,148 @@ Spec defined here:
 https://github.com/CAVaccineInventory/vaccine-feed-ingest/wiki/Normalized-Location-Schema
 """
 
-from typing import List, Optional
+import enum
+import re
+from typing import List, Optional, Union
+
+from pydantic import AnyUrl, EmailStr, Field, HttpUrl
 
 from .common import BaseModel
+
+# Validate zipcode is in 5 digit or 5 digit + 4 digit format
+# e.g. 94612, 94612-1234
+ZIPCODE_RE = re.compile(r"^[0-9]{5}(?:-[0-9]{4})?$")
+
+# Validate that phone number is a valid US phone number.
+# Less strict than spec so normalizers don't need to encode phone numbers exactly
+# e.g. (444) 444-4444, +1 (444) 444-4444
+US_PHONE_RE = re.compile(
+    r"^(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:\#|x\.?|ext\.?|extension)\s*(\d+))?$"  # noqa: E501
+)
+
+
+@enum.unique
+class State(str, enum.Enum):
+    ALABAMA = "AL"
+    ALASKA = "AK"
+    AMERICAN_SAMOA = "AS"
+    ARIZONA = "AZ"
+    ARKANSAS = "AR"
+    CALIFORNIA = "CA"
+    COLORADO = "CO"
+    CONNECTICUT = "CT"
+    DELAWARE = "DE"
+    DISTRICT_OF_COLUMBIA = "DC"
+    FLORIDA = "FL"
+    GEORGIA = "GA"
+    GUAM = "GU"
+    HAWAII = "HI"
+    IDAHO = "ID"
+    ILLINOIS = "IL"
+    INDIANA = "IN"
+    IOWA = "IA"
+    KANSAS = "KS"
+    KENTUCKY = "KY"
+    LOUISIANA = "LA"
+    MAINE = "ME"
+    MARYLAND = "MD"
+    MASSACHUSETTS = "MA"
+    MICHIGAN = "MI"
+    MINNESOTA = "MN"
+    MISSISSIPPI = "MS"
+    MISSOURI = "MO"
+    MONTANA = "MT"
+    NEBRASKA = "NE"
+    NEVADA = "NV"
+    NEW_HAMPSHIRE = "NH"
+    NEW_JERSEY = "NJ"
+    NEW_MEXICO = "NM"
+    NEW_YORK = "NY"
+    NORTH_CAROLINA = "NC"
+    NORTH_DAKOTA = "ND"
+    NORTHERN_MARIANA_IS = "MP"
+    OHIO = "OH"
+    OKLAHOMA = "OK"
+    OREGON = "OR"
+    PENNSYLVANIA = "PA"
+    PUERTO_RICO = "PR"
+    RHODE_ISLAND = "RI"
+    SOUTH_CAROLINA = "SC"
+    SOUTH_DAKOTA = "SD"
+    TENNESSEE = "TN"
+    TEXAS = "TX"
+    UTAH = "UT"
+    VERMONT = "VT"
+    VIRGINIA = "VA"
+    VIRGIN_ISLANDS = "VI"
+    WASHINGTON = "WA"
+    WEST_VIRGINIA = "WV"
+    WISCONSIN = "WI"
+    WYOMING = "WY"
+
+
+@enum.unique
+class ContactType(str, enum.Enum):
+    GENERAL = "general"
+    BOOKING = "booking"
+
+
+@enum.unique
+class DayOfWeek(str, enum.Enum):
+    MONDAY = "monday"
+    TUESDAY = "tuesday"
+    WEDNESDAY = "wednesday"
+    THURSDAY = "thursday"
+    FRIDAY = "friday"
+    SATURDAY = "saturday"
+    SUNDAY = "sunday"
+    PUBLIC_HOLIDAYS = "public_holidays"
+
+
+@enum.unique
+class VaccineType(str, enum.Enum):
+    PFIZER_BIONTECH = "pfizer_biontech"
+    MODERNA = "moderna"
+    JOHNSON_JOHNSON_JANSSEN = "johnson_johnson_janssen"
+    OXFORD_ASTRAZENECA = "oxford_astrazeneca"
+
+
+@enum.unique
+class VaccineSupply(str, enum.Enum):
+    """Supply level of vaccine"""
+
+    IN_STOCK = "in_stock"
+    OUT_OF_STOCK = "out_of_stock"
+
+
+@enum.unique
+class WheelchairAccessLevel(str, enum.Enum):
+    YES = "yes"  # there is wheelchair access not sure about level of service
+    FULL = "full"  # here is full wheelchair access
+    PARTIAL = "partial"  # there is partial wheelchair access
+    NO = "no"  # there is no wheelchair access
+
+
+@enum.unique
+class VaccineProvider(str, enum.Enum):
+    """Parent organization that provides vaccines"""
+
+    RITE_AID = "rite_aid"
+    WALGREENS = "walgreens"
+    SAFEWAY = "safeway"
+    VONS = "vons"
+    SAMS = "sams"
+    ALBERTSONS = "albertson"
+    PAVILIONS = "pavilions"
+    WALMART = "walmart"
+    CVS = "cvs"
+
+
+@enum.unique
+class LocationAuthority(str, enum.Enum):
+    """Authority that issues identifiers for locations"""
+
+    GOOGLE_PLACES = "google_places"
 
 
 class Address(BaseModel):
@@ -23,8 +162,8 @@ class Address(BaseModel):
     street1: Optional[str]
     street2: Optional[str]
     city: Optional[str]
-    state: Optional[str]
-    zip: Optional[str]
+    state: Optional[State]
+    zip: Optional[str] = Field(regex=ZIPCODE_RE.pattern)
 
 
 class LatLng(BaseModel):
@@ -35,8 +174,8 @@ class LatLng(BaseModel):
     },
     """
 
-    latitude: float
-    longitude: float
+    latitude: float = Field(ge=-90.0, le=90.0)
+    longitude: float = Field(ge=-180.0, le=180.0)
 
 
 class Contact(BaseModel):
@@ -50,10 +189,10 @@ class Contact(BaseModel):
     }
     """
 
-    contact_type: Optional[str]
-    phone: Optional[str]
-    website: Optional[str]
-    email: Optional[str]
+    contact_type: Optional[ContactType]
+    phone: Optional[str] = Field(regex=US_PHONE_RE.pattern)
+    website: Optional[HttpUrl]
+    email: Optional[EmailStr]
     other: Optional[str]
 
 
@@ -78,8 +217,8 @@ class OpenHour(BaseModel):
     }
     """
 
-    day: str
-    open: str
+    day: DayOfWeek
+    opens: str
     closes: str
 
 
@@ -103,8 +242,8 @@ class Vaccine(BaseModel):
     }
     """
 
-    vaccine: str
-    supply_level: Optional[str]
+    vaccine: VaccineType
+    supply_level: Optional[VaccineSupply]
 
 
 class Access(BaseModel):
@@ -118,7 +257,7 @@ class Access(BaseModel):
 
     walk: Optional[bool]
     drive: Optional[bool]
-    wheelchair: Optional[str]
+    wheelchair: Optional[WheelchairAccessLevel]
 
 
 class Organization(BaseModel):
@@ -129,7 +268,8 @@ class Organization(BaseModel):
     }
     """
 
-    id: Optional[str]
+    # Use VaccineProvider enum value if available overwise make your own.
+    id: Union[VaccineProvider, str, None]
     name: Optional[str]
 
 
@@ -142,9 +282,10 @@ class Link(BaseModel):
     }
     """
 
-    authority: Optional[str]
+    # Use LocationAuthority enum value if available, overwise make your own.
+    authority: Union[LocationAuthority, VaccineProvider, str, None]
     id: Optional[str]
-    uri: Optional[str]
+    uri: Optional[AnyUrl]
 
 
 class Source(BaseModel):
@@ -161,7 +302,7 @@ class Source(BaseModel):
 
     source: str
     id: str
-    fetched_from_uri: Optional[str]
+    fetched_from_uri: Optional[AnyUrl]
     fetched_at: Optional[str]
     published_at: Optional[str]
     data: dict
