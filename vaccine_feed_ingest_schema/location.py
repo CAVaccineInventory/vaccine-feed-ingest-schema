@@ -4,8 +4,8 @@ Spec defined here:
 https://github.com/CAVaccineInventory/vaccine-feed-ingest/wiki/Normalized-Location-Schema
 """
 
-import enum
 import datetime
+import enum
 import re
 from typing import List, Optional, Union
 
