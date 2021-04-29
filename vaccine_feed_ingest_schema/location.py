@@ -5,10 +5,11 @@ https://github.com/CAVaccineInventory/vaccine-feed-ingest/wiki/Normalized-Locati
 """
 
 import enum
+import datetime
 import re
 from typing import List, Optional, Union
 
-from pydantic import AnyUrl, EmailStr, Field, HttpUrl, root_validator
+from pydantic import AnyUrl, EmailStr, Field, HttpUrl, datetime_parse, root_validator
 
 from .common import BaseModel
 
@@ -22,6 +23,39 @@ ZIPCODE_RE = re.compile(r"^[0-9]{5}(?:-[0-9]{4})?$")
 US_PHONE_RE = re.compile(
     r"^(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:\#|x\.?|ext\.?|extension)\s*(\d+))?$"  # noqa: E501
 )
+
+
+class StringDatetime(datetime.datetime):
+    @classmethod
+    def __get_validators__(cls):
+        yield datetime_parse.parse_datetime
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, v: datetime.datetime) -> str:
+        return v.isoformat()
+
+
+class StringDate(datetime.date):
+    @classmethod
+    def __get_validators__(cls):
+        yield datetime_parse.parse_date
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, v: datetime.date) -> str:
+        return v.isoformat()
+
+
+class StringTime(datetime.date):
+    @classmethod
+    def __get_validators__(cls):
+        yield datetime_parse.parse_time
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, v: datetime.time) -> str:
+        return v.isoformat('minutes')
 
 
 @enum.unique
@@ -221,8 +255,8 @@ class OpenDate(BaseModel):
     }
     """
 
-    opens: Optional[str]
-    closes: Optional[str]
+    opens: Optional[StringDate]
+    closes: Optional[StringDate]
 
 
 class OpenHour(BaseModel):
@@ -235,8 +269,8 @@ class OpenHour(BaseModel):
     """
 
     day: DayOfWeek
-    opens: str
-    closes: str
+    opens: StringTime
+    closes: StringTime
 
 
 class Availability(BaseModel):
@@ -320,8 +354,8 @@ class Source(BaseModel):
     source: str
     id: str
     fetched_from_uri: Optional[AnyUrl]
-    fetched_at: Optional[str]
-    published_at: Optional[str]
+    fetched_at: Optional[StringDatetime]
+    published_at: Optional[StringDatetime]
     data: dict
 
 

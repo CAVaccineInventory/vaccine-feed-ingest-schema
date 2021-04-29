@@ -1,4 +1,5 @@
 import enum
+import json
 
 import pydantic.error_wrappers
 import pytest
@@ -112,7 +113,7 @@ def test_valid_location():
     )
 
     # Full record with str enums
-    assert location.NormalizedLocation(
+    full_loc = location.NormalizedLocation(
         id="source:id",
         name="name",
         address=location.Address(
@@ -176,6 +177,39 @@ def test_valid_location():
         source=location.Source(
             source="source",
             id="id",
+            fetched_from_uri="https://example.org",
+            fetched_at="2020-04-04T04:04:04.4444",
+            published_at="2020-04-04T04:04:04.4444",
             data={"id": "id"},
         ),
     )
+    assert full_loc
+
+    # Verify dict serde
+    full_loc_dict = full_loc.dict()
+    assert full_loc_dict
+
+    parsed_full_loc = location.NormalizedLocation.parse_obj(full_loc_dict)
+    assert parsed_full_loc
+
+    assert parsed_full_loc == full_loc
+
+    # Verify json serde
+    full_loc_json = full_loc.json()
+    assert full_loc_json
+
+    parsed_full_loc = location.NormalizedLocation.parse_raw(full_loc_json)
+    assert parsed_full_loc
+
+    assert parsed_full_loc == full_loc
+
+    # Verify dict->json serde
+    full_loc_json_dumps = json.dumps(full_loc_dict)
+    assert full_loc_json_dumps
+
+    assert full_loc_json_dumps == full_loc_json
+
+    parsed_full_loc = location.NormalizedLocation.parse_raw(full_loc_json_dumps)
+    assert parsed_full_loc
+
+    assert parsed_full_loc == full_loc
