@@ -260,7 +260,7 @@ class Organization(BaseModel):
     }
     """
 
-    # Use VaccineProvider enum value if availabel overwise make your own.
+    # Use VaccineProvider enum value if available overwise make your own.
     id: Union[VaccineProvider, str, None]
     name: Optional[str]
 
