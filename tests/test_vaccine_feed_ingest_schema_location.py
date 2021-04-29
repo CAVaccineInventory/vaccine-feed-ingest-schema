@@ -55,6 +55,67 @@ def test_has_expected_enums():
     assert not extra, "Extra enum found. Update this test."
 
 
+def test_opening_days():
+    assert location.OpenDate(
+        opens="2021-04-01",
+        closes="2021-04-01",
+    )
+
+    assert location.OpenDate(opens="2021-04-01")
+
+    assert location.OpenDate(
+        closes="2021-04-01",
+    )
+
+    with pytest.raises(pydantic.error_wrappers.ValidationError):
+        location.OpenDate(
+            closes="2021-04-01T04:04:04",
+        )
+
+    with pytest.raises(pydantic.error_wrappers.ValidationError):
+        location.OpenDate(
+            opens="tomorrow",
+        )
+
+    with pytest.raises(pydantic.error_wrappers.ValidationError):
+        location.OpenDate(
+            opens="2021-06-01",
+            closes="2021-01-01",
+        )
+
+
+def test_opening_hours():
+    assert location.OpenHour(
+        day="monday",
+        opens="08:00",
+        closes="14:00",
+    )
+
+    with pytest.raises(pydantic.error_wrappers.ValidationError):
+        location.OpenHour(day="monday", opens="8h", closes="14:00")
+
+    with pytest.raises(pydantic.error_wrappers.ValidationError):
+        location.OpenHour(
+            day="mon",
+            opens="08:00",
+            closes="14:00",
+        )
+
+    with pytest.raises(pydantic.error_wrappers.ValidationError):
+        location.OpenHour(
+            day="monday",
+            opens="20:00",
+            closes="06:00",
+        )
+
+    with pytest.raises(pydantic.error_wrappers.ValidationError):
+        location.OpenHour(
+            day="monday",
+            opens="2021-01-01T08:00:00",
+            closes="14:00",
+        )
+
+
 def test_valid_contact():
     assert location.Contact(
         contact_type=location.ContactType.BOOKING,
