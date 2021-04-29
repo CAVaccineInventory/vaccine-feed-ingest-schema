@@ -38,7 +38,7 @@ def test_raises_on_invalid_location():
     with pytest.raises(pydantic.error_wrappers.ValidationError):
         location.NormalizedLocation(
             id="source:id",
-            access=location.Access(drive="available"),
+            contact=location.Contact(phone="444-444"),
             source=location.Source(
                 source="source",
                 id="id",
@@ -89,7 +89,7 @@ def test_valid_location():
         opening_hours=[
             location.OpenHour(
                 day="monday",
-                open="08:00",
+                opens="08:00",
                 closes="14:00",
             ),
         ],
