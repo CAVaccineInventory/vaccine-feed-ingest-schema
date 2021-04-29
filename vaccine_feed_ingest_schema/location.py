@@ -275,8 +275,8 @@ class OpenHour(BaseModel):
     """
     {
         "day": str as day of week enum e.g. monday,
-        "opens": str as 24h hh:mm,
-        "closes": str as 24h hh:mm,
+        "opens": str as 24h local time formatted as hh:mm,
+        "closes": str as 24h local time formatted as hh:mm,
     }
     """
 
@@ -369,8 +369,8 @@ class Source(BaseModel):
         "source": str as source type enum e.g. vaccinespotter,
         "id": str as source defined id e.g. 7382088,
         "fetched_from_uri": str as uri where data was fetched from,
-        "fetched_at": str as iso8601 datetime (when scraper ran),
-        "published_at": str as iso8601 datetime (when source claims it updated),
+        "fetched_at": str as iso8601 utc datetime (when scraper ran),
+        "published_at": str as iso8601 utc datetime (when source claims it updated),
         "data": {...parsed source data in source schema...},
     }
     """
