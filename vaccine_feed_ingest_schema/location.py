@@ -167,7 +167,7 @@ class LatLng(BaseModel):
     """
 
     latitude: float = Field(gt=-90.0, lt=90.0)
-    longitude: float = Field(gt=-180.01, lt=180.01)
+    longitude: float = Field(gt=-180.0, lt=180.0)
 
 
 class Contact(BaseModel):
