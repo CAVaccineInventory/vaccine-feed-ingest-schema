@@ -111,6 +111,14 @@ class VaccineType(str, enum.Enum):
 
 
 @enum.unique
+class VaccineSupply(str, enum.Enum):
+    """Supply level of vaccine"""
+
+    IN_STOCK = "in_stock"
+    OUT_OF_STOCK = "out_of_stock"
+
+
+@enum.unique
 class WheelchairAccessLevel(str, enum.Enum):
     YES = "yes"  # there is wheelchair access not sure about level of service
     FULL = "full"  # here is full wheelchair access
@@ -235,7 +243,7 @@ class Vaccine(BaseModel):
     """
 
     vaccine: VaccineType
-    supply_level: Optional[str]
+    supply_level: Optional[VaccineSupply]
 
 
 class Access(BaseModel):
