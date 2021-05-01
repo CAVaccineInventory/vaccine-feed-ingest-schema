@@ -374,7 +374,9 @@ class Organization(BaseModel):
     """
 
     # Use VaccineProvider enum value if available overwise make your own.
-    id: Union[VaccineProvider, str, None] = Field(regex=ENUM_VALUE_RE.pattern, max_length=ENUM_MAX_LENGTH)
+    id: Union[VaccineProvider, str, None] = Field(
+        regex=ENUM_VALUE_RE.pattern, max_length=ENUM_MAX_LENGTH
+    )
     name: Optional[str] = Field(max_length=VALUE_MAX_LENGTH)
 
 
