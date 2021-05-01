@@ -42,6 +42,18 @@ LOCATION_ID_RE = re.compile(r"^[a-z0-9_]+\:[a-zA-Z0-9_-]+$")
 # Source ids can have anything but a space or a colon. Those must be replaced with another character (like a dash).
 SOURCE_ID_RE = re.compile(r"^[^\s\:]+$")
 
+# Max length for long text fields storing notes
+NOTE_MAX_LENGTH = 2046
+
+# Max length for long text fields storing notes
+VALUE_MAX_LENGTH = 256
+
+# Max length for long text fields storing notes
+ENUM_MAX_LENGTH = 64
+
+# Max length for id string fields
+ID_MAX_LENGTH = 128
+
 
 class StringDatetime(datetime.datetime):
     @classmethod
@@ -211,9 +223,9 @@ class Address(BaseModel):
     },
     """
 
-    street1: Optional[str]
-    street2: Optional[str]
-    city: Optional[str]
+    street1: Optional[str] = Field(max_length=VALUE_MAX_LENGTH)
+    street2: Optional[str] = Field(max_length=VALUE_MAX_LENGTH)
+    city: Optional[str] = Field(max_length=VALUE_MAX_LENGTH)
     state: Optional[State]
     zip: Optional[str] = Field(regex=ZIPCODE_RE.pattern)
 
@@ -245,7 +257,7 @@ class Contact(BaseModel):
     phone: Optional[str] = Field(regex=US_PHONE_RE.pattern)
     website: Optional[HttpUrl]
     email: Optional[EmailStr]
-    other: Optional[str]
+    other: Optional[str] = Field(max_length=NOTE_MAX_LENGTH)
 
     @root_validator
     @classmethod
@@ -362,8 +374,8 @@ class Organization(BaseModel):
     """
 
     # Use VaccineProvider enum value if available overwise make your own.
-    id: Union[VaccineProvider, str, None] = Field(regex=ENUM_VALUE_RE.pattern)
-    name: Optional[str]
+    id: Union[VaccineProvider, str, None] = Field(regex=ENUM_VALUE_RE.pattern, max_length=ENUM_MAX_LENGTH)
+    name: Optional[str] = Field(max_length=VALUE_MAX_LENGTH)
 
 
 class Link(BaseModel):
@@ -377,9 +389,9 @@ class Link(BaseModel):
 
     # Use LocationAuthority enum value if available, overwise make your own.
     authority: Union[LocationAuthority, VaccineProvider, str, None] = Field(
-        regex=ENUM_VALUE_RE.pattern
+        regex=ENUM_VALUE_RE.pattern, max_length=ENUM_MAX_LENGTH
     )
-    id: Optional[str]
+    id: Optional[str] = Field(regex=SOURCE_ID_RE.pattern, max_length=ID_MAX_LENGTH)
     uri: Optional[AnyUrl]
 
 
@@ -395,8 +407,8 @@ class Source(BaseModel):
     }
     """
 
-    source: str = Field(regex=ENUM_VALUE_RE.pattern)
-    id: str = Field(regex=SOURCE_ID_RE.pattern)
+    source: str = Field(regex=ENUM_VALUE_RE.pattern, max_length=ENUM_MAX_LENGTH)
+    id: str = Field(regex=SOURCE_ID_RE.pattern, max_length=ID_MAX_LENGTH)
     fetched_from_uri: Optional[AnyUrl]
     fetched_at: Optional[StringDatetime]
     published_at: Optional[StringDatetime]
@@ -404,8 +416,8 @@ class Source(BaseModel):
 
 
 class NormalizedLocation(BaseModel):
-    id: str = Field(regex=LOCATION_ID_RE.pattern)
-    name: Optional[str]
+    id: str = Field(regex=LOCATION_ID_RE.pattern, max_length=ID_MAX_LENGTH)
+    name: Optional[str] = Field(max_length=VALUE_MAX_LENGTH)
     address: Optional[Address]
     location: Optional[LatLng]
     contact: Optional[List[Contact]]
