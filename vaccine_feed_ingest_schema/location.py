@@ -45,10 +45,10 @@ SOURCE_ID_RE = re.compile(r"^[^\s\:]+$")
 # Max length for long text fields storing notes
 NOTE_MAX_LENGTH = 2046
 
-# Max length for long text fields storing notes
+# Max length for normal string value fields
 VALUE_MAX_LENGTH = 256
 
-# Max length for long text fields storing notes
+# Max length for short enum identifier fields
 ENUM_MAX_LENGTH = 64
 
 # Max length for id string fields
