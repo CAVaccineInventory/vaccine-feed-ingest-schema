@@ -37,7 +37,7 @@ ENUM_VALUE_RE = re.compile(r"^[a-z0-9_]+$")
 
 # Lowercase alpha-numeric and underscores with one colon
 # e.g. az_arcgis:hsdg46sj
-LOCATION_ID_RE = re.compile(r"^[a-z0-9_]+\:[a-z0-9_-]+$")
+LOCATION_ID_RE = re.compile(r"^[a-z0-9_]+\:[a-zA-Z0-9_-]+$")
 
 # Source ids can have anything but a space or a colon. Those must be replaced with another character (like a dash).
 SOURCE_ID_RE = re.compile(r"^[^\s\:]+$")
