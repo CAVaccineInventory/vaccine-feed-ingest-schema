@@ -192,7 +192,17 @@ class WheelchairAccessLevel(str, enum.Enum):
 
 @enum.unique
 class VaccineProvider(str, enum.Enum):
-    """Parent organization that provides vaccines"""
+    """Brand that administers vaccines.
+
+    The list of participating US pharmacies can be found here:
+    https://www.cdc.gov/vaccines/covid-19/retail-pharmacy-program/participating-pharmacies.html
+
+    If multiple brands (eg Big Y Pharmacy, Brookshires) are owned by the same
+    parent (eg TOPCO), each brand will get a separate entry in this enum.
+
+    In the future, the parent corporations that own one or more brands
+    might also be explicitly represented in the schema.
+    """
 
     ACME = "acme"
     ALBERTSONS = "albertson"
@@ -224,29 +234,33 @@ class VaccineProvider(str, enum.Enum):
     INGLES = "ingles"
     KAISER_HEALTH_PLAN = "kaiser_health_plan"
     KAISER_PERMANENTE = "kaiser_permanente"
-    KING_SOOPERS = "king_soopers"  # TODO: remove (KROGER subsidiary)
+    KING_SOOPERS = "king_soopers"
     KROGER = "kroger"
-    LEWIS_FAMILY_DRUG = "lewis_family_drug"
+    LITTLE_CLINIC = "little_clinic"
+    MARIANOS = "marianos"
     MARKET_STREET = "market_street"
     MEDICAP = "medicap"
     MEIJER = "meijer"
+    OSCO = "osco"
     PAVILIONS = "pavilions"
     PICK_N_SAVE = "pick_n_save"
-    PUBLIX = "publix"
     PRICE_CHOPPER = "price_chopper"
+    PUBLIX = "publix"
     QFC = "qfc"
     RALEYS = "raleys"
     RITE_AID = "rite_aid"
     SAFEWAY = "safeway"
     SAMS = "sams"
+    SAV_ON = "sav_on"
     SHOP_RITE = "shop_rite"
     SMITHS = "smiths"
+    SOUTH_EASTERN = "south_eastern"
     STOP_AND_SHOP = "stop_and_shop"
+    THRIFTY = "thrifty"
     TOM_THUMB = "tom_thumb"
     VONS = "vons"
     WALGREENS = "walgreens"
     WALMART = "walmart"
-    WEGMANS = "wegmans"
     WEIS = "weis"
     WINN_DIXIE = "winn_dixie"
 
