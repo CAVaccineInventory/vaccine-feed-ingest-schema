@@ -192,22 +192,25 @@ class WheelchairAccessLevel(str, enum.Enum):
 
 @enum.unique
 class VaccineProvider(str, enum.Enum):
-    """Parent organization that provides vaccines"""
+    """Brand that administers vaccines.
 
-    RITE_AID = "rite_aid"
-    WALGREENS = "walgreens"
-    SAFEWAY = "safeway"
-    VONS = "vons"
-    SAMS = "sams"
-    ALBERTSONS = "albertson"
-    PAVILIONS = "pavilions"
-    WALMART = "walmart"
-    CVS = "cvs"
+    The list of participating US pharmacies can be found here:
+    https://www.cdc.gov/vaccines/covid-19/retail-pharmacy-program/participating-pharmacies.html
+
+    If multiple brands (eg Big Y Pharmacy, Brookshires) are owned by the same
+    parent (eg TOPCO), each brand will get a separate entry in this enum.
+
+    In the future, the parent corporations that own one or more brands
+    might also be explicitly represented in the schema.
+    """
+
     ACME = "acme"
+    ALBERTSONS = "albertson"
     BIG_Y = "big_y"
     BROOKSHIRE = "brookshire"
     COSTCO = "costco"
     CUB = "cub_pharmacy"
+    CVS = "cvs"
     DILLONS = "dillons"
     DRUGCO = "drugco"
     FAMILY_FARE = "family_fare"
@@ -219,20 +222,47 @@ class VaccineProvider(str, enum.Enum):
     GIANT = "giant"
     GIANT_EAGLE = "giant_eagle"
     GIANT_FOOD = "giant_food"
-    HEB = "heb"
     HAGGEN = "haggen"
     HANNAFORD = "hannaford"
     HARMONS = "harmons"
     HARPS = "harps"
     HARRIS_TEETER = "harris_teeter"
     HARTIG = "hartig"
+    HEB = "heb"
     HOMELAND = "homeland"
     HY_VEE = "hyvee"
+    INGLES = "ingles"
     KAISER_HEALTH_PLAN = "kaiser_health_plan"
     KAISER_PERMANENTE = "kaiser_permanente"
     KING_SOOPERS = "king_soopers"
     KROGER = "kroger"
-    INGLES = "ingles"
+    LITTLE_CLINIC = "little_clinic"
+    MARIANOS = "marianos"
+    MARKET_STREET = "market_street"
+    MEDICAP = "medicap"
+    MEIJER = "meijer"
+    OSCO = "osco"
+    PAVILIONS = "pavilions"
+    PICK_N_SAVE = "pick_n_save"
+    PRICE_CHOPPER = "price_chopper"
+    PUBLIX = "publix"
+    QFC = "qfc"
+    RALEYS = "raleys"
+    RITE_AID = "rite_aid"
+    SAFEWAY = "safeway"
+    SAMS = "sams"
+    SAV_ON = "sav_on"
+    SHOP_RITE = "shop_rite"
+    SMITHS = "smiths"
+    SOUTH_EASTERN = "south_eastern"
+    STOP_AND_SHOP = "stop_and_shop"
+    THRIFTY = "thrifty"
+    TOM_THUMB = "tom_thumb"
+    VONS = "vons"
+    WALGREENS = "walgreens"
+    WALMART = "walmart"
+    WEIS = "weis"
+    WINN_DIXIE = "winn_dixie"
 
 
 @enum.unique
