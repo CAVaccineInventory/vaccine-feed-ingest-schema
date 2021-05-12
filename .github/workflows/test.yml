@@ -15,7 +15,7 @@ jobs:
       matrix:
         python-version: [3.9.2, 3.9]
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v2.3.4
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2.2.2
@@ -37,7 +37,7 @@ jobs:
     name: Action Linter
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
 
       - uses: cschleiden/actions-linter@v1
         with:
@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.3.4
         with:
           # Full git history is needed to get a proper list of changed files within `super-linter`
           fetch-depth: 0
