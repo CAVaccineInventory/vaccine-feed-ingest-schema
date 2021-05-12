@@ -18,7 +18,7 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - uses: actions/cache@v2
+    - uses: actions/cache@v2.1.5
       id: cached-pip-dependencies
       name: load pip install from cache
       with:
@@ -40,7 +40,7 @@ jobs:
       with:
         python-version: '3.9'
 
-    - uses: actions/cache@v2
+    - uses: actions/cache@v2.1.5
       name: Configure pip caching
       with:
         path: ~/.cache/pip
