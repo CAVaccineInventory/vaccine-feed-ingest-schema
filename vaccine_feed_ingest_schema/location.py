@@ -511,6 +511,6 @@ class NormalizedLocation(BaseModel):
             return values
 
         if not loc_id.startswith(f"{source_name}:"):
-            raise ValueError("Location ID must be prefixed with with source name")
+            raise ValueError("Location ID must be prefixed with source name")
 
         return values
