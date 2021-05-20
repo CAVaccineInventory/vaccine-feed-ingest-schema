@@ -20,4 +20,5 @@ class ImportSourceLocation(BaseModel):
     latitude: Optional[float]
     longitude: Optional[float]
     import_json: NormalizedLocation
+    content_hash: Optional[str]
     match: Optional[ImportMatchAction]
