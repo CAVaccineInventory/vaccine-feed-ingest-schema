@@ -31,5 +31,5 @@ setup(
     install_requires=["pydantic[email]"],
     extras_require={"test": ["pytest"], "lint": ["flake8", "black", "mypy", "isort"]},
     tests_require=["vaccine-feed-ingest-schema[test]"],
-    python_requires=">=3.9",
+    python_requires=">=3.8",
 )
