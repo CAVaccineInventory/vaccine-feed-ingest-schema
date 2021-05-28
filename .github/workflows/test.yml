@@ -22,7 +22,7 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - uses: actions/cache@v2.1.5
+    - uses: actions/cache@v2.1.6
       id: cached-pip-dependencies
       name: load pip install from cache
       with:
