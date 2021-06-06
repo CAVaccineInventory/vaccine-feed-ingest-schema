@@ -298,6 +298,7 @@ class LocationAuthority(str, enum.Enum):
     """Authority that issues identifiers for locations"""
 
     GOOGLE_PLACES = "google_places"
+    VTRCKS = "vtrcks"
 
 
 class Address(BaseModel):
